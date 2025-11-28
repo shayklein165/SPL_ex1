@@ -11,8 +11,57 @@ Playlist::Playlist(const std::string& name)
 Playlist::~Playlist() {
     #ifdef DEBUG
     std::cout << "Destroying playlist: " << playlist_name << std::endl;
+    PlaylistNode* current = head;
+    PlaylistNode* next;
+    while(current != nullptr){
+        next = current->next;
+        delete current -> track;
+        delete current;
+
+        current = next;
+    }
+    track_count = 0;
+
+    head = nullptr;
     #endif
 }
+
+Playlist::Playlist(const Playlist& other) 
+    : head(nullptr), playlist_name(other.playlist_name), track_count(0) {
+    
+    PlaylistNode* current_other = other.head;
+    PlaylistNode* tail = nullptr;
+
+    while(current_other) {
+        PointerWrapper<AudioTrack> cloned_wrapper = current_other->track->clone();
+        PlaylistNode* new_node = new PlaylistNode(cloned_wrapper.release());
+
+        if (!head) { 
+            head = new_node; 
+        } 
+        else { 
+            tail->next = new_node; 
+        }
+        
+        tail = new_node;
+        track_count++;
+
+        current_other = current_other->next;
+    }
+}
+
+Playlist& Playlist::operator=(const Playlist& other) {
+    if (this != &other) {
+        Playlist temp(other);
+        
+        std::swap(head, temp.head);
+        std::swap(playlist_name, temp.playlist_name);
+        std::swap(track_count, temp.track_count);
+    }
+    return *this;
+}
+
+
 
 void Playlist::add_track(AudioTrack* track) {
     if (!track) {
@@ -49,6 +98,9 @@ void Playlist::remove_track(const std::string& title) {
         } else {
             head = current->next;
         }
+
+        delete current -> track;
+        delete current;
 
         track_count--;
         std::cout << "Removed '" << title << "' from playlist" << std::endl;

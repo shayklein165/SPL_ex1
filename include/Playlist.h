@@ -13,6 +13,8 @@
  * @note In phase 4, the library service should provide canonical ownership semantics
  * for tracks referenced by playlists. Fixes in earlier phases should ensure
  * clear ownership and safe iteration without leaks.
+
+
  */
 
 struct PlaylistNode {
@@ -30,15 +32,22 @@ private:
     int track_count;
 
 public:
+// ******************************************** add move constructor *********************************************************
     /**
      * Constructor
      */
     Playlist(const std::string& name="");
 
+    Playlist(const Playlist& other);
+
+    Playlist& operator=(const Playlist& other);
+
+    
     /**
      * Destructor
      */
     ~Playlist();
+
 
     /**
      * Add a track to the playlist
