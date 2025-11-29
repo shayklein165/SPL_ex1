@@ -13,8 +13,7 @@ WAVTrack::WAVTrack(const std::string& title, const std::vector<std::string>& art
 void WAVTrack::load() {
     // TODO: Implement realistic WAV loading simulation
     // NOTE: Use exactly 2 spaces before the arrow (→) character
-    std::cout << "[WAVTrack::load] Loading WAV: \"" << title
-              << "\" at " << sample_rate/bit_depth << " bit (uncompressed)...\n";
+    std::cout << "[WAVTrack::load] Loading WAV: \"" << title << "\" at " << sample_rate/bit_depth << " bit (uncompressed)...\n";
     long long size = static_cast<long long>(duration_seconds) * sample_rate * (bit_depth / 8) * 2;
     std::cout << "  -> Estimated file size: " << size << " bytes" << std::endl;
     std::cout << "  -> Fast loading due to uncompressed format." << std::endl;

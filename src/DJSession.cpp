@@ -9,7 +9,16 @@
 
 
 DJSession::DJSession(const std::string& name, bool play_all)
-    : session_name(name), play_all(play_all) {
+    : session_name(name),
+    library_service(),
+    controller_service(),
+    mixing_service(),
+    config_manager(),
+    session_config(),
+    track_titles(),
+    play_all(play_all),
+    stats()
+      {
     std::cout << "DJ Session System initialized: " << session_name << std::endl;
 }
 
@@ -66,12 +75,12 @@ int DJSession::load_track_to_controller(const std::string& track_name) {
     // Your implementation here
     AudioTrack* autoTrack = this->library_service.findTrack(track_name);
     if(!autoTrack){
-        std::cerr << "[ERROR] Track: '" << track_name << "' not found in library";
+        std::cerr << "[ERROR] Track: '" << track_name << "' not found in library\n";
         stats.errors++;
         return 0;
     }
     
-    std::cout << "[System] Loading track '" << track_name << "' to controller...";
+    std::cout << "[System] Loading track '" << track_name << "' to controller..." << std::endl;
     int cache = this->controller_service.loadTrackToCache(*autoTrack);
 
     if(cache == 1){
@@ -98,7 +107,7 @@ bool DJSession::load_track_to_mixer_deck(const std::string& track_title) {
     // your implementation here
     AudioTrack* audioTrack = this->controller_service.getTrackFromCache(track_title);
     if(!audioTrack){
-        std::cerr << "[ERROR] Track: '" << track_title << "' not found in cache";
+        std::cerr << "[ERROR] Track: '" << track_title << "' not found in cache\n";
         stats.errors++;
         return false;
     }
@@ -108,12 +117,12 @@ bool DJSession::load_track_to_mixer_deck(const std::string& track_title) {
         stats.deck_loads_a++;
         stats.transitions++;
     }
-    if(load == 1){
+    else if(load == 1){
         stats.deck_loads_b++;
         stats.transitions++;
     }
-    if(load == -1){
-        std::cerr << "[ERROR] couldn't load track: '" << track_title << "' to deck";
+    else if(load == -1){
+        std::cerr << "[ERROR] couldn't load track: '" << track_title << "' to deck\n";
         stats.errors++;
         return false;
     }
@@ -130,7 +139,7 @@ void DJSession::simulate_dj_performance() {
     std::cout << "Starting interactive DJ session..." << std::endl;
     // 1. Load configuration
     if (!load_configuration()) {
-        std::cerr << "[ERROR] Failed to load configuration. Aborting session.";
+        std::cerr << "[ERROR] Failed to load configuration. Aborting session." << std::endl;
         return;
     }
     
@@ -138,8 +147,8 @@ void DJSession::simulate_dj_performance() {
     library_service.buildLibrary(session_config.library_tracks);
     
     // 3. Get available playlists from config
-    if (session_config.playlists.empty()) {
-        std::cerr << "[ERROR] No playlists found in configuration. Aborting session.";
+     if (session_config.playlists.empty()) {
+        std::cerr << "[ERROR] No playlists found in configuration. Aborting session." << std::endl;
         return;
     }
     std::cout << "\nStarting DJ performance simulation..." << std::endl;
@@ -149,7 +158,7 @@ void DJSession::simulate_dj_performance() {
     std::cout << "\n--- Processing Tracks ---" << std::endl;
 
     std::cout << "TODO: Implement the DJ performance simulation workflow here." << std::endl;
-    // Your implementation here
+   // Your implementation here
     if(play_all){
         std::vector<std::string> playlist_names;
         for (const auto& pair : session_config.playlists) {
@@ -167,23 +176,8 @@ void DJSession::simulate_dj_performance() {
                 std::cout << "\n–- Processing: " << track_title << " --" << std::endl;
                 stats.tracks_processed++;
 
-                int load = load_track_to_controller(track_title);
-                if(load == 1){
-                    stats.cache_hits++;
-                }
-                else if(load == 0){
-                    stats.cache_misses++;
-                }
-                else{
-                    stats.cache_misses++;
-                    stats.cache_evictions++;
-                }
-
-
-                bool loadDeck = load_track_to_mixer_deck(track_title);
-                if(!loadDeck){
-                    continue;
-                }
+                load_track_to_controller(track_title);
+                load_track_to_mixer_deck(track_title);
             }
 
             print_session_summary();
@@ -208,23 +202,8 @@ void DJSession::simulate_dj_performance() {
                 std::cout << "\n–- Processing: " << track_title << " --" << std::endl;
                 stats.tracks_processed++;
 
-                int load = load_track_to_controller(track_title);
-                if(load == 1){
-                    stats.cache_hits++;
-                }
-                else if(load == 0){
-                    stats.cache_misses++;
-                }
-                else{
-                    stats.cache_misses++;
-                    stats.cache_evictions++;
-                }
-
-
-                bool loadDeck = load_track_to_mixer_deck(track_title);
-                if(!loadDeck){
-                    continue;
-                }
+                load_track_to_controller(track_title);
+                load_track_to_mixer_deck(track_title);
             }
             
             print_session_summary();
@@ -248,7 +227,7 @@ bool DJSession::load_configuration() {
     std::cout << "Loading configuration from: " << config_path << std::endl;
     
     if (!SessionFileParser::parse_config_file(config_path, session_config)) {
-        std::cerr << "[ERROR] Failed to parse configuration file: " << config_path;
+        std::cerr << "[ERROR] Failed to parse configuration file: " << config_path << std::endl;
         return false;
     }
     

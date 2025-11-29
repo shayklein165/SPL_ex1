@@ -14,9 +14,10 @@
 class DJLibraryService {
 public:
     DJLibraryService(const Playlist& playlist);
-    DJLibraryService() = default;
-    ~DJLibraryService(); 
-
+    DJLibraryService();
+    ~DJLibraryService();
+    DJLibraryService(const DJLibraryService& other);
+    DJLibraryService& operator=(const DJLibraryService& other);
     /**
      * @brief Build the track library from parsed config data
      * @param library_tracks Vector of track info from config
@@ -28,7 +29,7 @@ public:
      * @param playlist_name Name of the playlist
      * @param track_indices Vector of 1-based track indices referencing the library
      */
-    void loadPlaylistFromIndices(const std::string& playlist_name, const std::vector<int>& track_indices);
+    void loadPlaylistFromIndices(const std::string &playlist_name, const std::vector<int> &track_indices);
 
     // Returns a reference to the loaded playlist
     Playlist& getPlaylist();

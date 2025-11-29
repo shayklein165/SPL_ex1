@@ -62,8 +62,7 @@ public:
      * HINT: How should ownership transfer from one wrapper to another?
      * What should happen to the source wrapper after the move?
      */
-    PointerWrapper(PointerWrapper&& other) noexcept {
-        this -> ptr = other.ptr;
+    PointerWrapper(PointerWrapper&& other) noexcept : ptr(other.ptr){
         other.ptr = nullptr;
     }
 
@@ -73,12 +72,14 @@ public:
      * Don't forget about self-assignment!
      */
     PointerWrapper& operator=(PointerWrapper&& other) noexcept {
-        if (ptr != nullptr){
-            delete ptr;
-        }
+        if(this != &other){
+            if (ptr != nullptr){
+                delete ptr;
+            }
 
-        this -> ptr = other.ptr;
-        other.ptr = nullptr;
+            this -> ptr = other.ptr;
+            other.ptr = nullptr;
+        }
         return *this;
     }
 
@@ -91,7 +92,7 @@ public:
      */
 
     T& operator*() const {
-        if (!ptr || ptr == nullptr){ 
+        if (!ptr){ 
             throw std::runtime_error("Attempted to access member via a null PointerWrapper.");
         }   
         return *ptr;
@@ -117,7 +118,7 @@ public:
      * @throws std::runtime_error if ptr is null
      */
     T* get() const {
-        if (!ptr|| ptr == nullptr)
+        if (!ptr)
         {
             throw std::runtime_error("Attempted to get raw pointer from null PointerWrapper.");
         }
@@ -144,7 +145,7 @@ public:
      * What should happen to the old pointer?
      */
     void reset(T* new_ptr = nullptr) {
-        if(ptr != nullptr){
+        if(ptr != nullptr && ptr != new_ptr){
             delete ptr;
         }
         this -> ptr = new_ptr;

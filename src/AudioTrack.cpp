@@ -31,33 +31,38 @@ AudioTrack::AudioTrack(const std::string& title, const std::vector<std::string>&
 // ========== TODO: STUDENTS IMPLEMENT RULE OF 5 ==========
 
 AudioTrack::~AudioTrack() {
-    // TODO: Implement the destructor
     #ifdef DEBUG
     std::cout << "AudioTrack destructor called for: " << title << std::endl;
     #endif
-    // Your code here...
-    if(waveform_data != nullptr){
+    
+    if (waveform_data != nullptr) {
         delete[] waveform_data;
     }
 }
 
 AudioTrack::AudioTrack(const AudioTrack& other)
+    : title(other.title), 
+    artists(other.artists),
+    duration_seconds(other.duration_seconds),
+    bpm(other.bpm),
+    waveform_data(nullptr),
+    waveform_size(other.waveform_size)
 {
     // TODO: Implement the copy constructor
     #ifdef DEBUG
     std::cout << "AudioTrack copy constructor called for: " << other.title << std::endl;
     #endif
-    // Your code here...
-    this->title = other.title;
-    this->artists = other.artists;
-    this->duration_seconds = other.duration_seconds;
-    this->bpm = other.bpm;
-    this->waveform_size = other.waveform_size;
 
-    this->waveform_data = new double[this -> waveform_size];
-    for (size_t i = 0; i < this->waveform_size; ++i) {
-        this->waveform_data[i] = other.waveform_data[i];
+    if(waveform_size>0){
+        this->waveform_data = new double[this -> waveform_size];
+        for (size_t i = 0; i < this->waveform_size; ++i) {
+            this->waveform_data[i] = other.waveform_data[i];
+        }
     }
+    else{
+        this->waveform_data = nullptr;
+    }
+    
 
 }
 
@@ -86,20 +91,19 @@ AudioTrack& AudioTrack::operator=(const AudioTrack& other) {
     return *this;
 }
 
-AudioTrack::AudioTrack(AudioTrack&& other) noexcept {
+AudioTrack::AudioTrack(AudioTrack&& other) noexcept
+: title(std::move(other.title)), 
+    artists(std::move(other.artists)), 
+    duration_seconds(other.duration_seconds), 
+    bpm(other.bpm),
+    waveform_data(other.waveform_data),
+    waveform_size(other.waveform_size)
+{
     // TODO: Implement the move constructor
     #ifdef DEBUG
     std::cout << "AudioTrack move constructor called for: " << other.title << std::endl;
     #endif
     // Your code here...
-    this->title = other.title;
-    this->artists = other.artists;
-    this->duration_seconds = other.duration_seconds;
-    this->bpm = other.bpm;
-    this->waveform_size = other.waveform_size;
-
-    this->waveform_data = other.waveform_data;
-
     other.waveform_data = nullptr;
     other.waveform_size = 0;
 }

@@ -7,7 +7,7 @@
  * TODO: Implement MixingEngineService constructor
  */
 MixingEngineService::MixingEngineService()
-    : active_deck(0), bpm_tolerance(0), auto_sync(false)
+    : decks(), active_deck(1), auto_sync(false), bpm_tolerance(0)
 {
     // Your implementation here
     decks[0] = nullptr;
@@ -40,42 +40,43 @@ MixingEngineService::~MixingEngineService() {
 int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
     // Your implementation here
     std::cout << "\n=== Loading Track to Deck ===\n";
-    PointerWrapper<AudioTrack> cloned_track = track.clone();
-    if(!cloned_track){
-        std::cout << "[ERROR] Track: " << track.get_title() << "failed to clone";
+    PointerWrapper<AudioTrack> cloned_wrapper = track.clone();
+    if(!cloned_wrapper){
+        std::cerr << "[ERROR] Track: " << track.get_title() << "failed to clone\n";
         return -1;
     }
+
     size_t target_deck = 1-active_deck;
-    std::cout << "[Deck Switch] Target deck: " << target_deck;
+    std::cout << "[Deck Switch] Target deck: " << target_deck << "\n";
+
     if(decks[target_deck]){
         delete decks[target_deck];
         decks[target_deck] = nullptr;
     }
 
-    cloned_track -> load();
-    cloned_track -> analyze_beatgrid();
+    AudioTrack* new_track = cloned_wrapper.release();
+    new_track -> load();
+    new_track -> analyze_beatgrid();
 
     if (decks[active_deck]) {
         if (auto_sync) {
-            if (!can_mix_tracks(cloned_track)) { 
-                sync_bpm(cloned_track); 
+            if (!can_mix_tracks(cloned_wrapper)) { 
+                sync_bpm(cloned_wrapper);
             }
         }
     }
-    decks[target_deck] = cloned_track.release();
-    std::cout << "[Load Complete] " << track.get_title() << " is now loaded on deck " << target_deck;
+    decks[target_deck] = new_track;
+    std::cout << "[Load Complete] '" << track.get_title() << "' is now loaded on deck " << target_deck << "\n";
+    
     if(decks[active_deck]){
-        std::cout << "[Unload] Unloading previous deck " << active_deck << "(" << decks[active_deck]->get_title() << ")";
+        std::cout << "[Unload] Unloading previous deck " << active_deck << " (" << decks[active_deck]->get_title() << ").\n";
         delete decks[active_deck];
         decks[active_deck] = nullptr;
     }
 
     active_deck =target_deck;
-    std::cout << "[Active Deck] switched to deck " << target_deck;
+    std::cout << "[Active Deck] Switched to deck " << target_deck;
     
-
-    
-
     return target_deck; // Placeholder
 }
 
@@ -103,13 +104,10 @@ void MixingEngineService::displayDeckStatus() const {
  * @return: true if BPM difference <= tolerance, false otherwise
  */
 bool MixingEngineService::can_mix_tracks(const PointerWrapper<AudioTrack>& track) const {
-    // Your implementation here
-    if(decks[active_deck]){
-        if(track){
-            return(std::abs(decks[active_deck]->get_bpm()-track->get_bpm())<=bpm_tolerance);
-        }
+    if (decks[active_deck] && track) {
+        return (std::abs(decks[active_deck]->get_bpm() - track->get_bpm()) <= bpm_tolerance);
     }
-    return false; // Placeholder
+    return false;
 }
 
 /**
@@ -117,13 +115,9 @@ bool MixingEngineService::can_mix_tracks(const PointerWrapper<AudioTrack>& track
  * @param track: Track to synchronize with active deck
  */
 void MixingEngineService::sync_bpm(const PointerWrapper<AudioTrack>& track) const {
-    // Your implementation here
     if(track && decks[active_deck]){
-        int originBPM = track -> get_bpm();
-        size_t avg = (decks[active_deck]->get_bpm()+track->get_bpm())/2;
-        track -> set_bpm(avg);
-        std::cout << "[Sync BPM] Syncing BPM from " << originBPM
-        
-        << " to " << track -> get_bpm();
-    }
+        int original_bpm = track->get_bpm();
+        int new_bpm = (decks[active_deck]->get_bpm() + track->get_bpm()) / 2;
+        track->set_bpm(new_bpm);
+        std::cout << "[Sync BPM] Syncing BPM of " << track->get_title() << " from " << original_bpm << " to average BPM: " << new_bpm << "\n";    }
 }
