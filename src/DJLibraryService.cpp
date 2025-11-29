@@ -47,6 +47,15 @@ void DJLibraryService::buildLibrary(const std::vector<SessionConfig::TrackInfo>&
     std::cout << "[INFO] Track library built: " << library.size() << " tracks loaded" << std::endl;
 
 }
+DJLibraryService::DJLibraryService(const DJLibraryService& other) 
+    : session_name(other.session_name), 
+      playlist(other.playlist) 
+{
+    for (AudioTrack* canonical_track : other.library_tracks) {
+        PointerWrapper<AudioTrack> cloned_wrapper = canonical_track->clone();
+        this->library_tracks.push_back(cloned_wrapper.release()); 
+    }
+}
 
 /**
  * @brief Display the current state of the DJ library playlist
