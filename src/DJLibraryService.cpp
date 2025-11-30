@@ -134,7 +134,6 @@ void DJLibraryService::loadPlaylistFromIndices(const std::string& playlist_name,
         cloned_track->analyze_beatgrid();
 
         this->playlist.add_track(cloned_track); 
-        std::cout << "[INFO] Added '" << cloned_track->get_title() << "' to playlist '" << playlist_name << "'" << std::endl;
     }
 
     std::cout << "[INFO] Playlist loaded: " << playlist_name << " (" << playlist.get_track_count() << " tracks)" << std::endl;
