@@ -120,6 +120,6 @@ private:
      * @brief Print final session summary with statistics
      */
     void print_session_summary() const;
-    void DJSession::print_track_summary() const; 
+    
 
 };

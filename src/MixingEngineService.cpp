@@ -76,6 +76,7 @@ int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
 
     active_deck =target_deck;
     std::cout << "[Active Deck] Switched to deck " << target_deck;
+    displayDeckStatus();
     
     return target_deck; // Placeholder
 }

@@ -176,8 +176,8 @@ void DJSession::simulate_dj_performance() {
                 stats.tracks_processed++;
 
                 load_track_to_controller(track_title);
+                controller_service.displayCacheStatus();
                 load_track_to_mixer_deck(track_title);
-                
             }
 
             print_session_summary();
@@ -203,6 +203,7 @@ void DJSession::simulate_dj_performance() {
                 stats.tracks_processed++;
 
                 load_track_to_controller(track_title);
+                
                 load_track_to_mixer_deck(track_title);
             }
             
@@ -291,19 +292,6 @@ std::string DJSession::display_playlist_menu_from_config() {
 
 void DJSession::print_session_summary() const {
     std::cout << "\n=== DJ Session Summary ===" << std::endl;
-    std::cout << "Session: " << session_name << std::endl;
-    std::cout << "Tracks processed: " << stats.tracks_processed << std::endl;
-    std::cout << "Cache hits: " << stats.cache_hits << std::endl;
-    std::cout << "Cache misses: " << stats.cache_misses << std::endl;
-    std::cout << "Cache evictions: " << stats.cache_evictions << std::endl;
-    std::cout << "Deck A loads: " << stats.deck_loads_a << std::endl;
-    std::cout << "Deck B loads: " << stats.deck_loads_b << std::endl;
-    std::cout << "Transitions: " << stats.transitions << std::endl;
-    std::cout << "Errors: " << stats.errors << std::endl;
-    std::cout << "=== Session Complete ===" << std::endl;
-}
-void DJSession::print_track_summary() const {
-    std::cout << "\n=== Track Summary ===" << std::endl;
     std::cout << "Session: " << session_name << std::endl;
     std::cout << "Tracks processed: " << stats.tracks_processed << std::endl;
     std::cout << "Cache hits: " << stats.cache_hits << std::endl;
