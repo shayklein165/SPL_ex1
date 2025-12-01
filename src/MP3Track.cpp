@@ -18,23 +18,23 @@ void MP3Track::load() {
     // TODO: Implement MP3 loading with format-specific operations
     // NOTE: Use exactly 2 spaces before the arrow (→) character
     if(has_id3_tags){
-        std::cout << "  -> Processing ID3 metadata(artist info, album art, etc.)...\n";
+        std::cout << "  → Processing ID3 metadata (artist info, album art, etc.)...\n";
     }
     else{
-        std::cout << "  -> No ID3 tags found.";
+        std::cout << "  → No ID3 tags found.";
     }
 
-    std::cout << "  -> Decoding MP3 frames...\n";
-    std::cout << "  -> Load complete.\n";
+    std::cout << "  → Decoding MP3 frames...\n";
+    std::cout << "  → Load complete.\n";
     
 }
 
 void MP3Track::analyze_beatgrid() {
      std::cout << "[MP3Track::analyze_beatgrid] Analyzing beat grid for: \"" << title << "\"\n";
-     double beats_estimated = (duration_seconds / 60.0) * bpm;
+     int beats_estimated = (duration_seconds / 60.0) * bpm;
      double precision_factor = bitrate / 320.0;
      std::cout << "  → Estimated beats: " << beats_estimated
-     << "  -> Compression precision factor: " << precision_factor << "\n";
+     << "  → Compression precision factor: " << precision_factor << "\n";
      // NOTE: Use exactly 2 spaces before each arrow (→) character
 
 }

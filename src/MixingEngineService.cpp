@@ -69,7 +69,7 @@ int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
     std::cout << "[Load Complete] '" << track.get_title() << "' is now loaded on deck " << target_deck << "\n";
     
     if(decks[active_deck]){
-        std::cout << "[Unload] Unloading previous deck " << active_deck << " (" << decks[active_deck]->get_title() << ").\n";
+        std::cout << "[Unload] Unloading previous deck " << active_deck << " (" << decks[active_deck]->get_title() << ")\n";
         delete decks[active_deck];
         decks[active_deck] = nullptr;
     }
@@ -85,7 +85,7 @@ int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
  * @brief Display current deck status
  */
 void MixingEngineService::displayDeckStatus() const {
-    std::cout << "\n=== Deck Status ===\n";
+    std::cout << "\n\n=== Deck Status ===\n";
     for (size_t i = 0; i < 2; ++i) {
         if (decks[i])
             std::cout << "Deck " << i << ": " << decks[i]->get_title() << "\n";
@@ -120,5 +120,5 @@ void MixingEngineService::sync_bpm(const PointerWrapper<AudioTrack>& track) cons
         int original_bpm = track->get_bpm();
         int new_bpm = (decks[active_deck]->get_bpm() + track->get_bpm()) / 2;
         track->set_bpm(new_bpm);
-        std::cout << "[Sync BPM] Syncing BPM of " << track->get_title() << " from " << original_bpm << " to average BPM: " << new_bpm << "\n";    }
+        std::cout << "[Sync BPM] Syncing BPM " << " from " << original_bpm << " to " << new_bpm << "\n";    }
 }

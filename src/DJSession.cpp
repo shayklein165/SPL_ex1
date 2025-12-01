@@ -172,7 +172,7 @@ void DJSession::simulate_dj_performance() {
                 continue;
             }
             for(const std::string& track_title : track_titles){
-                std::cout << "\n–- Processing: " << track_title << " --" << std::endl;
+                std::cout << "\n--- Processing: " << track_title << " ---" << std::endl;
                 stats.tracks_processed++;
 
                 load_track_to_controller(track_title);
@@ -180,9 +180,7 @@ void DJSession::simulate_dj_performance() {
                 load_track_to_mixer_deck(track_title);
             }
 
-            print_session_summary();
-            stats = SessionStats{};
-        
+            print_session_summary();        
         }
     }
     
