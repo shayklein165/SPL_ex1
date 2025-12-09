@@ -46,6 +46,7 @@ bool DJSession::load_playlist(const std::string& playlist_name)  {
     }
     
     track_titles = library_service.getTrackTitles();
+    std::reverse(track_titles.begin(), track_titles.end());
     return true;
 }
 
@@ -135,6 +136,7 @@ bool DJSession::load_track_to_mixer_deck(const std::string& track_title) {
  * @note Calls print_session_summary() to display results after playlist completion
  */
 void DJSession::simulate_dj_performance() {
+    
     std::cout << "=== DJ Controller System ===" << std::endl;
     std::cout << "Starting interactive DJ session..." << std::endl;
     // 1. Load configuration
