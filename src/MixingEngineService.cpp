@@ -46,7 +46,7 @@ int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
         return -1;
     }
 
-    size_t target_deck = 1-active_deck;
+    int target_deck = 1-active_deck;
     std::cout << "[Deck Switch] Target deck: " << target_deck << "\n";
 
     if(decks[target_deck]){
@@ -54,9 +54,8 @@ int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
         decks[target_deck] = nullptr;
     }
 
-    AudioTrack* new_track = cloned_wrapper.release();
-    new_track -> load();
-    new_track -> analyze_beatgrid();
+    cloned_wrapper -> load();
+    cloned_wrapper -> analyze_beatgrid();
 
     if (!decks[active_deck]) {
        std::cout << "[Sync BPM] Cannot sync - one of the decks is empty."<<std::endl;
@@ -68,7 +67,7 @@ int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
             }
         }
     }
-    decks[target_deck] = new_track;
+    decks[target_deck] = cloned_wrapper.release();
     std::cout << "[Load Complete] '" << track.get_title() << "' is now loaded on deck " << target_deck << "\n";
     
    
@@ -78,8 +77,8 @@ int MixingEngineService::loadTrackToDeck(const AudioTrack& track) {
     displayDeckStatus();
     
     return target_deck; // Placeholder
-}
 
+}
 /**
  * @brief Display current deck status
  */
@@ -104,11 +103,15 @@ void MixingEngineService::displayDeckStatus() const {
  * @return: true if BPM difference <= tolerance, false otherwise
  */
 bool MixingEngineService::can_mix_tracks(const PointerWrapper<AudioTrack>& track) const {
-    if (decks[active_deck] && track) {
-        return (std::abs(decks[active_deck]->get_bpm() - track->get_bpm()) <= bpm_tolerance);
+    if(!decks[active_deck] || !track){
+        return false;
     }
-    return false;
+    int bpm_diff = std::abs(decks[active_deck]->get_bpm() - track->get_bpm());
+    if(bpm_diff <= bpm_tolerance)
+        return true;
+    return false; 
 }
+
 
 /**
  * TODO: Implement sync_bpm method

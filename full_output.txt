@@ -575,6 +575,7 @@ Active Deck: 1
   → Load complete.
 [MP3Track::analyze_beatgrid] Analyzing beat grid for: "Anahera"
   → Estimated beats: 931  → Compression precision factor: 0.8
+[Sync BPM] Syncing BPM  from 140 to 132
 [Load Complete] 'Anahera' is now loaded on deck 0
 [Active Deck] Switched to deck 0
 
@@ -853,6 +854,7 @@ Active Deck: 1
   → Load complete.
 [MP3Track::analyze_beatgrid] Analyzing beat grid for: "The Air I Breathe"
   → Estimated beats: 694  → Compression precision factor: 1
+[Sync BPM] Syncing BPM  from 124 to 131
 [Load Complete] 'The Air I Breathe' is now loaded on deck 0
 [Active Deck] Switched to deck 0
 
@@ -2209,6 +2211,7 @@ Active Deck: 1
   → Load complete.
 [MP3Track::analyze_beatgrid] Analyzing beat grid for: "Voodoo People"
   → Estimated beats: 782  → Compression precision factor: 0.8
+[Sync BPM] Syncing BPM  from 120 to 128
 [Load Complete] 'Voodoo People' is now loaded on deck 0
 [Active Deck] Switched to deck 0
 
@@ -2347,6 +2350,7 @@ Active Deck: 1
   → Load complete.
 [MP3Track::analyze_beatgrid] Analyzing beat grid for: "Black Friday (Pretty Like The Sun)"
   → Estimated beats: 534  → Compression precision factor: 0.8
+[Sync BPM] Syncing BPM  from 140 to 130
 [Load Complete] 'Black Friday (Pretty Like The Sun)' is now loaded on deck 0
 [Active Deck] Switched to deck 0
 
@@ -2411,6 +2415,7 @@ Active Deck: 1
   → Load complete.
 [MP3Track::analyze_beatgrid] Analyzing beat grid for: "Innerbloom (RUMPUS Edit)"
   → Estimated beats: 518  → Compression precision factor: 1
+[Sync BPM] Syncing BPM  from 123 to 131
 [Load Complete] 'Innerbloom (RUMPUS Edit)' is now loaded on deck 0
 [Active Deck] Switched to deck 0
 
